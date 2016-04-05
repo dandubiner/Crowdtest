@@ -1,0 +1,754 @@
+id,workflow_id,name,title,description,keywords,annotation,code,instructions,batch_size,min_workers,max_workers,adjudication_strategy,adjudication_strategy_params,quality_strategy,quality_strategy_params,compensation_strategy,compensation_strategy_params,next_step_strategy,next_step_strategy_params,work_unit_json_example,work_unit_html,job_html,css_code,js_code,check_unreadability_code,instance_comparison_strategy,instance_comparison_code,standardize_answers_code,combine_answers_code,compare_with_official_code,created_at,updated_at,is_first_step,code_validation,qualification_strategy_params,platform,crowd_task_name,is_send_box,work_on_output,comparison_strategy_code,time_allowed,auto_ful_fillment,transformed_combine_answers_code
+36,29,Basic Transcribing,Transcribing audio,"","",,"","<li><h2>Listen to the audio and transcribe the content into the text field area.</h2></li>
+        <li>If there is <b>MORE </b>than a single speaker, make sure to use SpeakerX: where X is the speaker's number.</li>
+        <li>Audio cannot be transcribed at all? Enter <b>N/A</b> in the text field.</li><li><br></li><li>An example for a single-speaker should be:</li><li>Hello, my name is...</li><li><br></li><li><br></li><li>An example for a multi-speakers audio should be:</li><li>Speaker1: Hello</li><li>Speaker2: Good morning.</li><li>Speaker1: How are you today?<br></li>Speaker3: Hello<br>Speaker2: Hey<br>Speaker1: Hey<br><br><br>",2,1,1,minimum,,basic,"{""error_thresholds""=>{""block""=>nil, ""poor""=>35, ""good""=>0, ""excellent""=>0}}",,,descriptive,"{""if_agreement_action""=>""finish"", ""if_agreement_next_step""=>nil, ""if_disagreement_action""=>""finish"", ""if_disagreement_next_step""=>nil, ""if_unreadable_action""=>""finish"", ""if_unreadable_next_step""=>nil}","
+{""mp3"": ""http://ia801505.us.archive.org/5/items/firstchaptercollection004_1508_librivox/firstchapter004_codenapoleon_frenchconsul_cc_64kb.mp3"",
+  ""snippet_index"":""1""}
+
+
+
+","<!-- STYLE  SECTION -->
+  <style type=""text/css"">
+
+  textarea {
+  	width: 60em;    /* the inital width of the textarea */
+  	height: 10em;    /* the inital height of the textarea */
+
+  	max-width: 60em;    /* the maximum width of the textarea */
+  	max-height: 15em;    /* the maximum height of the textarea */
+  	 
+  	border: 0.1em solid #ccc;
+  	border-radius: 0.5em;
+  background-color: #fffff6;
+ }
+ </style>
+
+
+<tr>
+<script type=""text/javascript"">
+    $(document).ready(function(){
+    $(""#jquery_jplayer_{{snippet_index}}"").jPlayer({
+    ready: function () {
+      $(this).jPlayer(""setMedia"", {
+        title: ""{{title}}"",
+        mp3: ""{{mp3}}""
+     /*   oga: ""{{oga}}""*/
+      });
+    },
+    cssSelectorAncestor: ""#jp_container_{{snippet_index}}"",
+    swfPath: ""/js"",
+    supplied: ""mp3"",  /* supplied: ""m4a, oga"",*/
+    useStateClassSkin: true,
+    autoBlur: true,
+    smoothPlayBar: true,
+    keyEnabled: true,
+    remainingDuration: true,
+    toggleDuration: true
+});
+    });    
+        
+  </script>
+  
+     <div id=""jquery_jplayer_{{snippet_index}}"" class=""jp-jplayer""></div>
+    <div id=""jp_container_{{snippet_index}}"" class=""jp-audio"" role=""application"" aria-label=""media player"">
+      <div class=""jp-type-single"">
+        <div class=""jp-gui jp-interface"">
+          <div class=""jp-volume-controls"">
+            <button class=""jp-mute"" role=""button"" tabindex=""0"">mute</button>
+            <button class=""jp-volume-max"" role=""button"" tabindex=""0"">max volume</button>
+            <div class=""jp-volume-bar"">
+              <div class=""jp-volume-bar-value""></div>
+            </div>
+          </div>
+          <div class=""jp-controls-holder"">
+            <div class=""jp-controls"">
+              <button class=""jp-play"" role=""button"" tabindex=""0"">play</button>
+              <button class=""jp-stop"" role=""button"" tabindex=""0"">stop</button>
+            </div>
+            <div class=""jp-progress"">
+              <div class=""jp-seek-bar"">
+                <div class=""jp-play-bar""></div>
+              </div>
+            </div>
+            <div class=""jp-current-time"" role=""timer"" aria-label=""time"">&nbsp;</div>
+            <div class=""jp-duration"" role=""timer"" aria-label=""duration"">&nbsp;</div>
+            <div class=""jp-toggles"">
+              <button class=""jp-repeat"" role=""button"" tabindex=""0"">repeat</button>
+            </div>
+          </div>
+        </div>
+        <div class=""jp-details"">
+          <div class=""jp-title"" aria-label=""title"">&nbsp;</div>
+        </div>
+        <div class=""jp-no-solution"">
+          <span>Update Required</span>
+          To play the media you will need to either update your browser to a recent version or update your <a href=""http://get.adobe.com/flashplayer/"" target=""_blank"">Flash plugin</a>.
+        </div>
+      </div>
+    </div>
+    </tr>
+    <tr>
+        <p></p>
+    </tr>
+ <tr>
+<textarea autofocus='autofocus' placeholder=""Transcribe the audio here. Please note - when there is more than one speaker type Speaker1: or Speaker2: "">
+</textarea>
+</tr>
+
+","<head>
+<script type=""text/javascript"" src=""http://code.jquery.com/jquery-1.11.1.min.js""></script>
+<script type=""text/javascript"" src=""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/javascript/jplayer/jquery.jplayer.js""></script>
+  
+  <div class=""bg-info"">
+    <h2>Instructions</h2>
+    <ul>
+        <li>Listen to the audio and transcribe the content into the text field area.</li>
+        <li>If there is MORE than a single speaker, make sure to use SpeakerX: where X is the speaker's number.</li>
+        <li>Audio cannot be transcribed at all? Enter N/A in the text field</li>
+   <!--  <video  width=""800"" height=""640"" controls=""controls"">
+    <source src=""https://fasterap.s3.amazonaws.com/users/Demo/CARLAR.mp4"" type=""video/mp4"">
+    </video> -->
+    
+    </ul>
+</div>
+ 
+    
+<table>
+    {{work_units}}
+</table>
+</head>","/*
+ * Skin for jPlayer Plugin (jQuery JavaScript Library)
+ * http://www.jplayer.org
+ *
+ * Skin Name: Blue Monday
+ *
+ * Copyright (c) 2010 - 2014 Happyworm Ltd
+ * Licensed under the MIT license.
+ *  - http://www.opensource.org/licenses/mit-license.php
+ *
+ * Author: Silvia Benvenuti
+ * Skin Version: 5.1 (jPlayer 2.8.0)
+ * Date: 13th November 2014
+ */
+
+.bg-info { 
+    background-color: #d9edf7; 
+    overflow: auto;
+    margin: 0px;
+    padding: 10px;
+    width: 640px;
+}
+
+$jplayer-images-base-url: ""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/"" !default;
+
+.jp-audio *:focus,
+.jp-audio-stream *:focus,
+.jp-video *:focus {
+	/* Disable the browser focus highlighting. */
+	outline:none;
+}
+
+.jp-audio button::-moz-focus-inner,
+.jp-audio-stream button::-moz-focus-inner,
+.jp-video button::-moz-focus-inner {
+	/* Disable the browser CSS3 focus highlighting. */
+	border: 0;
+}
+
+.jp-audio,
+.jp-audio-stream,
+.jp-video {
+
+	font-size:16px;
+
+	font-family:Verdana, Arial, sans-serif;
+	line-height:1.6;
+	color: #666;
+	border:1px solid #009be3;
+	background-color:#eee;
+}
+.jp-audio {
+	width:420px;
+}
+.jp-audio-stream {
+	width:182px;
+}
+.jp-video-270p {
+	width:480px;
+}
+.jp-video-360p {
+	width:640px;
+}
+.jp-video-full {
+	/* Rules for IE6 (full-screen) */
+	width:480px;
+	height:270px;
+	/* Rules for IE7 (full-screen) - Otherwise the relative container causes other page items that are not position:static (default) to appear over the video/gui. */
+	position:static !important; position:relative;
+}
+
+/* The z-index rule is defined in this manner to enable Popcorn plugins that add overlays to video area. EG. Subtitles. */
+.jp-video-full div div {
+	z-index:1000;
+}
+
+.jp-video-full .jp-jplayer {
+	top: 0;
+	left: 0;
+	position: fixed !important; position: relative; /* Rules for IE6 (full-screen) */
+	overflow: hidden;
+}
+
+.jp-video-full .jp-gui {
+	position: fixed !important; position: static; /* Rules for IE6 (full-screen) */
+	top: 0;
+	left: 0;
+	width:100%;
+	height:100%;
+	z-index:1001; /* 1 layer above the others. */
+}
+
+.jp-video-full .jp-interface {
+	position: absolute !important; position: relative; /* Rules for IE6 (full-screen) */
+	bottom: 0;
+	left: 0;
+}
+
+.jp-interface {
+	position: relative;
+	background-color:#eee;
+	width:100%;
+}
+
+.jp-audio .jp-interface {
+	height:80px;
+}
+
+.jp-audio-stream .jp-interface {
+	height:80px;
+}
+
+.jp-video .jp-interface {
+	border-top:1px solid #009be3;
+}
+
+/* @group CONTROLS */
+
+.jp-controls-holder {
+	clear: both;
+	width:420px;
+	margin:0 auto;
+	position: relative;
+	overflow:hidden;
+	top:-8px; /* This negative value depends on the size of the text in jp-currentTime and jp-duration */
+}
+
+.jp-interface .jp-controls {
+	margin:0;
+	padding: 0;
+	overflow:hidden;
+}
+
+.jp-audio .jp-controls {
+	width: 380px;
+	padding:20px 20px 0 20px;
+}
+
+.jp-audio-stream .jp-controls {
+	position:absolute;
+	top:20px;
+	left:20px;
+	width:142px;
+}
+
+.jp-video .jp-type-single .jp-controls {
+	width: 78px;
+	margin-left: 200px;
+}
+
+.jp-video .jp-type-playlist .jp-controls {
+	width: 134px;
+	margin-left: 172px;
+}
+.jp-video .jp-controls {
+	float: left;
+}
+
+.jp-controls button {
+	display:block;
+	float: left;
+	overflow:hidden;
+	text-indent:-9999px;
+	border:none;
+	cursor:pointer;
+}
+.jp-play {
+	width:40px;
+	height:40px;
+}
+
+.jp-play {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 0 no-repeat;
+}
+.jp-play:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -41px 0 no-repeat;
+}
+.jp-state-playing .jp-play {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -42px no-repeat;
+}
+.jp-state-playing .jp-play:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -41px -42px no-repeat;
+}
+
+.jp-stop, .jp-previous, .jp-next {
+	width:28px;
+	height:28px;
+	margin-top:6px;
+}
+
+.jp-stop {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -83px no-repeat;
+	margin-left:10px;
+}
+
+.jp-stop:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -29px -83px no-repeat;
+}
+
+.jp-previous {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -112px no-repeat;
+}
+.jp-previous:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -29px -112px no-repeat;
+}
+
+.jp-next {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -141px no-repeat;
+}
+.jp-next:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -29px -141px no-repeat;
+}
+
+/* @end */
+
+/* @group progress bar */
+
+.jp-progress {
+	overflow:hidden;
+	background-color: #ddd;
+}
+.jp-audio .jp-progress {
+	position: absolute;
+	top:32px;
+	height:15px;
+}
+.jp-audio .jp-type-single .jp-progress {
+	left:110px;
+	width:186px;
+}
+.jp-audio .jp-type-playlist .jp-progress {
+	left:166px;
+	width:130px;
+}
+.jp-video .jp-progress {
+	top:0px;
+	left:0px;
+	width:100%;
+	height:10px;
+}
+.jp-seek-bar {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -202px repeat-x;
+	width:0px;
+	height:100%;
+	cursor: pointer;
+}
+.jp-play-bar {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -218px repeat-x ;
+	width:0px;
+	height:100%;
+}
+
+/* The seeking class is added/removed inside jPlayer */
+.jp-seeking-bg {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpgf"");
+}
+
+/* @end */
+
+/* @group volume controls */
+
+.jp-state-no-volume .jp-volume-controls {
+	display:none;
+}
+
+.jp-volume-controls {
+	position:absolute;
+	top:32px;
+	left:308px;
+	width:200px;
+}
+.jp-audio-stream .jp-volume-controls {
+	left:70px;
+}
+.jp-video .jp-volume-controls {
+	top:12px;
+	left:50px;
+}
+
+.jp-volume-controls button {
+	display:block;
+	position: absolute;
+	overflow:hidden;
+	text-indent:-9999px;
+	border:none;
+	cursor:pointer;
+}
+
+.jp-mute,
+.jp-volume-max {
+	width:18px;
+	height:15px;
+}
+.jp-volume-max {
+	left:74px;
+}
+
+.jp-mute {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -170px no-repeat;
+}
+.jp-mute:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -19px -170px no-repeat;
+}
+.jp-state-muted .jp-mute {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -60px -170px no-repeat;
+}
+.jp-state-muted .jp-mute:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -79px -170px no-repeat;
+}
+.jp-volume-max {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -186px no-repeat;
+}
+.jp-volume-max:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpgg"") -19px -186px no-repeat;
+}
+
+.jp-volume-bar {
+	position: absolute;
+	overflow:hidden;
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -250px repeat-x;
+	top:5px;
+	left:22px;
+	width:46px;
+	height:5px;
+	cursor: pointer;
+}
+.jp-volume-bar-value {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -256px repeat-x;
+	width:0px;
+	height:5px;
+}
+
+/* @end */
+
+/* @group current time and duration */
+
+.jp-audio .jp-time-holder {
+	position:absolute;
+	top:50px;
+}
+.jp-audio .jp-type-single .jp-time-holder {
+	left:110px;
+	width:186px;
+}
+.jp-audio .jp-type-playlist .jp-time-holder {
+	left:166px;
+	width:130px;
+}
+
+.jp-current-time,
+.jp-duration {
+	width:60px;
+	font-size:.64em;
+	font-style:oblique;
+}
+.jp-current-time {
+	float: left;
+	display:inline;
+	cursor:default;
+}
+.jp-duration {
+	float: right;
+	display:inline;
+	text-align: right;
+	cursor:pointer;
+}
+
+.jp-video .jp-current-time {
+	margin-left:20px;
+}
+.jp-video .jp-duration {
+	margin-right:20px;
+}
+
+/* @end */
+
+/* @group playlist */
+
+.jp-details {
+	font-weight:bold;
+	text-align:center;
+	cursor:default;
+}
+
+.jp-details,
+.jp-playlist {
+	width:100%;
+	background-color:#ccc;
+	border-top:1px solid #009be3;
+}
+
+.jp-type-single .jp-details,
+.jp-type-playlist .jp-details {
+	border-top:none;
+}
+
+.jp-details .jp-title {
+	margin:0;
+	padding:5px 20px;
+	font-size:.72em;
+	font-weight:bold;
+}
+
+.jp-playlist ul {
+	list-style-type:none;
+	margin:0;
+	padding:0 20px;
+	font-size:.72em;
+}
+.jp-playlist li {
+	padding:5px 0 4px 20px;
+	border-bottom:1px solid #eee;
+}
+.jp-playlist li div {
+	display:inline;
+}
+
+/* Note that the first-child (IE6) and last-child (IE6/7/8) selectors do not work on IE */
+
+div.jp-type-playlist div.jp-playlist li:last-child {
+	padding:5px 0 5px 20px;
+	border-bottom:none;
+}
+div.jp-type-playlist div.jp-playlist li.jp-playlist-current {
+	list-style-type:square;
+	list-style-position:inside;
+	padding-left:7px;
+}
+div.jp-type-playlist div.jp-playlist a {
+	color: #333;
+	text-decoration: none;
+}
+div.jp-type-playlist div.jp-playlist a:hover {
+	color:#0d88c1;
+}
+div.jp-type-playlist div.jp-playlist a.jp-playlist-current {
+	color:#0d88c1;
+}
+
+div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove {
+	float:right;
+	display:inline;
+	text-align:right;
+	margin-right:10px;
+	font-weight:bold;
+	color:#666;
+}
+div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove:hover {
+	color:#0d88c1;
+}
+div.jp-type-playlist div.jp-playlist span.jp-free-media {
+	float:right;
+	display:inline;
+	text-align:right;
+	margin-right:10px;
+}
+div.jp-type-playlist div.jp-playlist span.jp-free-media a{
+	color:#666;
+}
+div.jp-type-playlist div.jp-playlist span.jp-free-media a:hover{
+	color:#0d88c1;
+}
+span.jp-artist {
+	font-size:.8em;
+	color:#666;
+}
+
+/* @end */
+
+.jp-video-play {
+	width:100%;
+	overflow:hidden; /* Important for nested negative margins to work in modern browsers */
+	cursor:pointer;
+	background-color:rgba(0,0,0,0); /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */
+}
+.jp-video-270p .jp-video-play {
+	margin-top:-270px;
+	height:270px;
+}
+.jp-video-360p .jp-video-play {
+	margin-top:-360px;
+	height:360px;
+}
+.jp-video-full .jp-video-play {
+	height:100%;
+}
+.jp-video-play-icon {
+	position:relative;
+	display:block;
+	width: 112px;
+	height: 100px;
+
+	margin-left:-56px;
+	margin-top:-50px;
+	left:50%;
+	top:50%;
+
+	background: url(""#{$jplayer-images-base-url}jplayer.blue.monday.video.play.png"") 0 0 no-repeat;
+	text-indent:-9999px;
+	border:none;
+	cursor:pointer;
+}
+.jp-video-play-icon:focus {
+	background: url(""#{$jplayer-images-base-url}jplayer.blue.monday.video.play.png"") 0 -100px no-repeat;
+}
+
+
+.jp-jplayer audio,
+.jp-jplayer {
+	width:0px;
+	height:0px;
+}
+
+.jp-jplayer {
+	background-color: #000000;
+}
+
+
+
+/* @group TOGGLES */
+
+/* The audio toggles are nested inside jp-time-holder */
+
+.jp-toggles {
+	padding:0;
+	margin:0 auto;
+	overflow:hidden;
+}
+
+.jp-audio .jp-type-single .jp-toggles {
+	width:25px;
+}
+.jp-audio .jp-type-playlist .jp-toggles {
+	width:55px;
+	margin: 0;
+	position: absolute;
+	left: 325px;
+	top: 50px;
+}
+
+.jp-video .jp-toggles {
+	position:absolute;
+	right:16px;
+	margin:0;
+	margin-top:10px;
+	width:100px;
+}
+
+.jp-toggles button {
+	display:block;
+	float:left;
+	width:25px;
+	height:18px;
+	text-indent:-9999px;
+	line-height:100%; /* need this for IE6 */
+	border:none;
+	cursor:pointer;
+}
+
+.jp-full-screen {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -310px no-repeat;
+	margin-left: 20px;
+}
+
+.jp-full-screen:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -30px -310px no-repeat;
+}
+
+.jp-state-full-screen .jp-full-screen {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -60px -310px no-repeat;
+}
+
+.jp-state-full-screen .jp-full-screen:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -90px -310px no-repeat;
+}
+
+.jp-repeat {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -290px no-repeat;
+}
+
+.jp-repeat:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -30px -290px no-repeat;
+}
+
+.jp-state-looped .jp-repeat {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -60px -290px no-repeat;
+}
+
+.jp-state-looped .jp-repeat:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -90px -290px no-repeat;
+}
+
+.jp-shuffle {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") 0 -270px no-repeat;
+	margin-left: 5px;
+}
+
+.jp-shuffle:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -30px -270px no-repeat;
+}
+
+.jp-state-shuffled .jp-shuffle {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -60px -270px no-repeat;
+}
+
+.jp-state-shuffled .jp-shuffle:focus {
+	background: url(""https://fasterap.s3.amazonaws.com/Plug-ins/jPlayer-2.9.2/src/skin/blue.monday/image/jplayer.blue.monday.jpg"") -90px -270px no-repeat;
+}
+
+
+/* @end */
+
+/* @group NO SOLUTION error feedback */
+
+.jp-no-solution {
+	padding:5px;
+	font-size:.8em;
+	background-color:#eee;
+	border:2px solid #009be3;
+	color:#000;
+	display:none;
+}
+
+.jp-no-solution a {
+	color:#000;
+}
+
+.jp-no-solution span {
+	font-size:1em;
+	display:block;
+	text-align:center;
+	font-weight:bold;
+}
+
+/* @end */
+","","",,"","","","",2015-08-25 07:18:34 UTC,2016-03-14 10:20:09 UTC,true,,{},private,storm_step_36,,false,,600,true,
