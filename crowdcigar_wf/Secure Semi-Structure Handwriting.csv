@@ -1,0 +1,662 @@
+id,workflow_id,name,title,description,keywords,annotation,code,instructions,batch_size,min_workers,max_workers,adjudication_strategy,adjudication_strategy_params,quality_strategy,quality_strategy_params,compensation_strategy,compensation_strategy_params,next_step_strategy,next_step_strategy_params,work_unit_json_example,work_unit_html,job_html,css_code,js_code,check_unreadability_code,instance_comparison_strategy,instance_comparison_code,standardize_answers_code,combine_answers_code,compare_with_official_code,created_at,updated_at,is_first_step,code_validation,qualification_strategy_params,platform,crowd_task_name,is_send_box,work_on_output,comparison_strategy_code,time_allowed,auto_ful_fillment,transformed_combine_answers_code
+216,109,Indentify Regions,Identify objects in images,Please read instructions within the task.  Identify objects as describes in the example.,Data Entry OCR images,,0001,"<div>
+    <h2>Instructions</h2>
+    <ul>
+      <li>Look at the image and mark any AREA which can be a candidate for Hand-Writing</li>
+        <li>Select the area using your mouse like in the example. Make the area as close as possible to the hand-written part</li>
+        <li>If there are no areas to select? Enter NA in the text field as in the sample.</li>
+  <li>Use the Zoom functionality if you're not sure.</li>
+<br>
+<b>Please note</b> - Make  4 mistakes and the HIT will be rejected. You have 4 invoices in each batch and each with max 3 regions. The system is validating your data and approve tasks with up to 4 mistakes.
+
+    </ul>
+<img src=""https://fasterap.s3.amazonaws.com/users/Temp/DescImage.png"" alt=""""><br></div><br>",4,2,5,majority,"{""threshold""=>0.51}",basic,"{""error_thresholds""=>{""block""=>nil, ""poor""=>60, ""good""=>1, ""excellent""=>0}}",basic,"{""base_comp""=>0.05}",descriptive,"{""if_agreement_action""=>""finish"", ""if_agreement_next_step""=>""storm_step_217"", ""if_disagreement_action""=>""send_to"", ""if_disagreement_next_step""=>""storm_step_224"", ""if_unreadable_action""=>""finish"", ""if_unreadable_next_step""=>""storm_step_217""}","{""url"":""https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1453921580736-HW_Eng_Inv1.png"" 
+   
+}"," <tr class=""highlighter"">
+ 
+    <td width=""70%"">
+    <canvas id=""canvas{{_index}}"" width=""550"" height=""550"">
+        <img class=""photo"" src=""{{url}}"" alt=""InvoiceImage"" style=""max-width: 100%;max-height: 100%; height: inherit !important;"">
+    </canvas>
+    </br>
+    <p align=""center"">
+    <input id=""createzonesbutton{{_index}}"" title=""Press alt to switch modes"" type=""button"" class=""buttoncreatezones btn btn-sm btn-primary"" value=""create zones""/>
+    <input id=""moveimagebutton{{_index}}"" title=""Press alt to switch modes"" type=""button"" class=""buttonmoveimage btn btn-sm btn-default"" value=""move image""/>
+    <input id=""zoominbutton{{_index}}"" title=""Press ctrl-plus to zoom in"" type=""button"" class=""buttonzoomin btn btn-sm btn-default"" value=""zoom in""/>
+    <input id=""zoomoutbutton{{_index}}"" title=""Press ctrl-minus to zoom out"" type=""button"" class=""buttonzoomout btn btn-sm btn-default"" value=""zoom out""/>
+    <input id=""bestfitbutton{{_index}}"" title=""Press ctrl-0 to zoom to best fit"" type=""button"" class=""buttonbestfit btn btn-sm btn-default"" value=""best fit""/>
+    <input id=""originalsizebutton{{_index}}"" title=""Press ctrl-1 to zoom to original size"" type=""button"" class=""buttonoriginalsize btn btn-sm btn-default"" value=""100%""/>
+    <input id=""deletezonebutton{{_index}}"" title=""Press delete or backspace to delete selected zones"" type=""button"" class=""buttondeletezone btn btn-sm btn-danger"" value=""delete zone""/>
+    <input id=""rotateleftbutton{{_index}}"" title=""Press left-arrow to rotate the image"" type=""button"" class=""buttonrotateleft btn btn-sm btn-default"" value=""rotate left""/>
+    <input id=""rotaterightbutton{{_index}}"" title=""Press right-arrow to rotate the image"" type=""button"" class=""buttonrotateright btn btn-sm btn-default"" value=""rotate right""/>
+    </p>
+    </br>
+  </td>
+  <td width=""30%"">
+   
+    <font color=""blue""> <h2> Type NA if nothing was found</h2></font> 
+
+        {{#text_field ""InvoiceNumber"" class=""ocr-correction"" size=""20""}}{{/text_field}}
+  
+ 
+    {{#hidden_field ""Annotation"" class=""AnnotationArray{{_index}}"" }}{{/hidden_field}}
+   
+  </td>
+</tr>
+
+<script>
+$(document).ready(function() {
+    //When getting it's from JSON using handlesbar, the default handlesbar
+    //extraction is string. That's why we get [Object Object] in every element.
+    //to resolve it, we need to extract the data using handlesbar's loop and reconstruct
+    //it back into JSON
+    
+  //  var extractedJson = '[';    //begining of the structure
+//    {{#each zonesjson}}         //this is handlesbar looping
+ //       extractedJson = extractedJson+'{""x"":{{x}},""y"":{{y}},""w"":{{w}},""h"":{{h}} },';
+//    {{/each}}
+    
+ //   if(extractedJson.length > 1) {
+        //finalizing - removing space+comma+closer and place closer + structure closer
+ //       extractedJson = extractedJson.substring(0, extractedJson.length - 3) + ""}]"";
+        //parsing it as a JSON into JsonArr
+ //       var jsonArr = JSON.parse(extractedJson);
+ //       setZonesOfCanvas({{_index}}, jsonArr);
+//    }
+ 
+    //if you write this without stringify you get [object object] but if you serialize
+    //the json into string using stringify this time you can see the results
+   
+    //alert(""index: "" + {{_index}} + "", len: "" + jsonArr.length + "" "" + JSON.stringify(jsonArr[1]));
+})
+
+$(document).on(""submit"", ""form"", function (e) {
+    var oForm = $(this);
+    var formId = oForm.attr(""id"");
+    var data = getDataOfCanvas({{_index}});
+    var zoneData = '';
+    if(data) {
+        //Zone of one canvas data will be written in the hidden field using this structure:
+        //zone0;xpos;ypos;width;height;zone1;xpos;ypos;width;height;zone2;xpos;ypos;width;height;...
+        zoneData = ""[ "";
+        for(i = 0; i < data.zones.length; i++) {
+            
+            //Json format with escaped quotes
+            zoneData += ""{\""x\"":"" + Math.round(data.zones[i].x) + "",\""y\"":"" + Math.round(data.zones[i].y) + "",\""w\"":"" + 
+                         Math.round(data.zones[i].w) + "",\""h\"":"" + Math.round(data.zones[i].h) + ""}"";
+
+            if(i < (data.zones.length - 1)) {
+                zoneData += "", "";
+            }
+        }
+        zoneData += "" ]"";
+    }
+    $("".AnnotationArray"" + {{_index}}).val(zoneData);
+//   alert(data.zones.length + "" zones. Zone data: "" + zoneData);
+ //   var firstValue = oForm.find(""input"").first().val();
+//    alert(""Form '"" + formId + "" is being submitted, value of first input is: "" + firstValue);
+    // Do stuff 
+    return true;
+})
+</script>
+","<head>
+<script src=""//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js""></script>
+<!--<script src=""https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1454550592302-jquery.panzoom.js""></script>-->
+<link href=""https://www.jqueryscript.net/css/jquerysctipttop.css"" rel=""stylesheet"" type=""text/css"">
+</head>
+
+
+
+<div class=""bg-info"">
+    <h2>Instructions</h2>
+    <ul>
+       <li>Look at the image and mark any AREA which can be a candidate for Hand-Writing</li>
+        <li>Select the area using your mouse like in the example. Make the area as close as possible to the hand-written part</li>
+        <li>If there are no areas to select? Enter NA in the text field as in the sample.</li>
+  <li>Use the Zoom functionality if you're not sure.</li>
+<br/>
+<b>Please note</b> - Make  4 mistakes and the HIT will be rejected. You have 4 invoices in each batch and each with max 3 regions. The system is validating your data and approve tasks with up to 4 mistakes.
+
+
+        
+ 
+    </ul>
+</div>
+<x-settings showzones=true singlezone=false zonecolor=""rgba(40, 200, 0, 0.2)"" zoneborder=""rgba(0, 70, 0, 1.0)"" />
+<table>
+    {{ work_units }}    
+</table>
+
+<script src=""https://s3-us-west-1.amazonaws.com/fasterap/users/37/incoming/35/1456585532846-imageViewer.js""></script>
+","canvas {
+    border:1px solid black;
+    margin: 10px;
+}
+
+tr.highlighter.active{
+    background-color: yellow;
+}
+
+td {
+   padding: 50px 0px;
+}
+.ocr-correction {
+    font-size: 14px;
+    
+}
+
+.bg-info { 
+    background-color: #95aee8; 
+    overflow: auto;
+    margin: 10px;
+    padding: 10px;
+     box-shadow: 0 0 5px 1px #969696;
+}
+
+
+.ocr-image {
+    margin: 7px;
+}
+
+.photo {
+    width: 90%;
+    height:90%;
+}
+.zoom-btn {
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 999999999;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1px solid black;
+ 
+}
+
+.zoom-btn-plus {
+  background: white url('https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1454559703385-plus.png') no-repeat center;
+  top: 4px;
+  left: 4px;
+}
+
+.zoom-btn-minus {
+  background: white url('https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1454559702844-minus.png') no-repeat center;
+  top: 4px;
+  left: 30px;
+}
+
+.zoomWindow { border: 1px solid black;
+ }
+ 
+ input[type=text]:focus, textarea:focus {
+ box-shadow: 0 0 5px 1px #969696;
+
+}","$('input[type=""text""]').blur(function(){
+    $(this).parents('tr').removeClass('active');
+}); 
+
+$('input[type=""text""]').focusin(function(){
+    $(this).parents('tr').addClass('active');
+});
+
+
+
+$('input[type=""text""]:first').focus();
+
+//jQuery('img').load(function() {
+//				jQuery("".photo"").jspanzoom({scrollZoom : true});
+//			});","",,"","","","",2016-03-04 07:52:41 UTC,2016-03-22 21:15:06 UTC,true,,{},mturk,storm_step_216,false,false,"",600,true,"#This function compares rectangles. 
+#The function expect same number of rectangles. if less then it's false
+#The Tolerance variable is the tolerance for comparison
+@Tolerance = 70
+
+
+def CompareSingleJsonRectangles (json1,json2,tolerance)
+    x1 = json1[""x""]
+    y1 = json1[""y""]
+    x12 = x1+ json1[""w""]
+    y12 = y1+ json1[""h""]
+    x2 = json2[""x""]
+    y2 = json2[""y""]
+    x22 = x2+ json2[""w""]
+    y22 = y2+ json2[""h""]
+    avgArea = ((json1[""w""]*json1[""h""])+(json2[""w""]*json2[""h""]))/2
+    x_overlap = [0,[x12,x22].min - [x1,x2].max].max
+    y_overlap = [0,[y12,y22].min - [y1,y2].max].max
+    overlap =  (x_overlap * y_overlap) *100/ avgArea
+
+    
+   # return x1.to_s + "":"" + y1.to_s + "":"" + x12.to_s + "":"" + y12.to_s + ""overlapx:""+x_overlap.to_s+"":""+y_overlap.to_s+
+   # "" --> ""+overlap.to_s + "" : ""+avgArea.to_s
+   return overlap >= tolerance
+    end
+
+
+def CompareJsonsArrays (json1,json2,tolerance)
+    firstJsonArray = JSON.parse(json1[""Annotation""])
+     secondJsonArray = JSON.parse(json2[""Annotation""])
+     @retString = """"
+     if (firstJsonArray.length == secondJsonArray.length) and
+       json1[""Annotation""].length > 4
+      
+         #looping on each array1 and array2. at the end -> number of TRUEs should reach length
+         @TrueCounter = 0
+         @FirstArrayIndex = 0
+        
+         loop do
+         @SecondArrayIndex = 0
+            loop do
+                #@retString += ""[""+@FirstArrayIndex.to_s+"",""+ @SecondArrayIndex.to_s+""]""
+                if CompareSingleJsonRectangles firstJsonArray[@FirstArrayIndex],secondJsonArray[@SecondArrayIndex],tolerance 
+                     @TrueCounter += 1
+                 end
+                 
+                  @SecondArrayIndex+=1
+                  break if @SecondArrayIndex >= secondJsonArray.length
+            end
+            
+         @FirstArrayIndex += 1
+         break if @FirstArrayIndex >= firstJsonArray.length
+         end
+         
+         
+     
+  return   @TrueCounter >= firstJsonArray.length  
+    else
+        #In case the JSONS are either different, or empty we get here
+        #however, if jsons are empty (no annotations), and all the rest is equal then we should return true
+        
+       
+        if json1.except(""id"")==json2.except(""id"")  #if they're true and above 4 digits in annotation it wouldn't get here
+            return true
+        else
+           return false
+    end
+   end
+end
+
+
+
+standardized_answers_array.each_with_index do |i,index|
+    internalInd = 0
+    agreedParam = false
+    loop do 
+    
+       if index != internalInd #internal loop skip same items
+          agreedParam =
+            CompareJsonsArrays standardized_answers_array[index],
+                             standardized_answers_array[internalInd], @Tolerance
+           
+             if agreedParam == true
+                     standardized_answers_array[index][""master_result""] = true
+                     standardized_answers_array[internalInd][""master_result""] = true
+             else
+                   standardized_answers_array[index][""master_result""] = false
+             end
+         
+             
+        
+             break if agreedParam ==  true  #if we found matching, we can skip the loop
+       end   
+    
+    internalInd+=1
+    break if internalInd ==standardized_answers_array.length
+    end
+     
+  
+
+end
+
+
+return standardized_answers_array"
+217,109,Data Entry,Correct numbers,"","",,"","<p>
+   <strong>BONUS AVAILABLE!</strong>
+  Make 0 mistakes and we will award you a <strong>200% </strong> bonus for your work.
+</p>
+<p>
+
+  Make more than 4 mistakes and the HIT will be rejected.
+</p>
+
+<p>
+  <strong>Your task is to type in the numbers / amounts into the text field.</strong></p><p><strong>PLEASE NOTE - some fields may contain amount or percentage. Make sure to type EXACTLY as it appears. <br></strong></p><p><br><strong></strong></p><p><br><strong></strong></p><p><span class=""wysiwyg-color-red""><b><u>For example</u></b></span></p><p><strong><br></strong></p><p><img src=""https://fasterap.s3.amazonaws.com/users/Demo/Harel/fields/Numeric/Insurance_CreditCard_ID1_1.png"" alt="""">&nbsp; <br></p><p><b>should be :&nbsp;&nbsp; 35404174</b><br><strong></strong></p>
+
+<p>
+  <strong>Notes: </strong>
+  </p><ul><li>Unreadable text? Please replace the entire field with <strong>n/a</strong></li></ul><br><br><br><br><br>",2,1,1,minimum,,basic,"{""error_thresholds""=>{""block""=>nil, ""poor""=>5, ""good""=>0, ""excellent""=>0}}",,,descriptive,"{""if_agreement_action""=>""finish"", ""if_agreement_next_step""=>""storm_step_216"", ""if_disagreement_action""=>""finish"", ""if_disagreement_next_step""=>""storm_step_216"", ""if_unreadable_action""=>""finish"", ""if_unreadable_next_step""=>""storm_step_216""}","{""urlsnippet"":""https://fasterap.s3.amazonaws.com/users/Demo/SemiStructure/Snippet1.png""}","<tr>
+    <td>
+        <img src=""{{urlsnippet}}""/>
+    </td>
+    <td>
+        {{#text_field hand_written}}{{/text_field}}
+    </td>
+</tr>
+","<table>
+    {{ work_units }}    
+</table>
+","td {margin: 5px; padding: 5px;}
+tr.active {background: yellow;}
+.bg-info { 
+    background-color: #d9edf7; 
+    overflow: auto;
+    margin: 10px;
+    padding: 10px;
+}
+
+
+","$('input[type=""text""]').blur(function(){
+    $(this).parents('tr').removeClass('active');
+}); 
+
+$('input[type=""text""]').focusin(function(){
+    $(this).parents('tr').addClass('active');
+});
+
+$('input:first').focus();
+","",,"","","","",2016-03-04 07:52:41 UTC,2016-03-04 14:57:25 UTC,false,,{},private,storm_step_217,,false,"",600,true,
+224,109,Indentify Regions (copy),Identify objects in images,Please read instructions within the task.  Identify objects as describes in the example.,Data Entry OCR images,,0001,"<div>
+    <h2>Instructions</h2>
+    <ul>
+        <li>Look at the image and mark any AREA which can be classified as Hand-Writing</li>
+        <li>Select the area using your mouse and type HW as a description like in the example. Make sure to hit the 'Save' Button for each selected area.</li>
+        <li>If there are no areas to select? Enter N/A in the text field as in the sample.</li>
+    </ul>
+<img src=""https://fasterap.s3.amazonaws.com/users/Demo/SemiStructure/Desc.png"" alt=""""></div>",4,1,1,minimum,,basic,"{""error_thresholds""=>{""block""=>nil, ""poor""=>60, ""good""=>1, ""excellent""=>0}}",basic,"{""base_comp""=>0.15}",descriptive,"{""if_agreement_action""=>""finish"", ""if_agreement_next_step""=>""storm_step_217"", ""if_disagreement_action""=>""send_to"", ""if_disagreement_next_step""=>""storm_step_217"", ""if_unreadable_action""=>""finish"", ""if_unreadable_next_step""=>""storm_step_217""}","{""url"":""https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1453921580736-HW_Eng_Inv1.png"" 
+   
+}"," <tr class=""highlighter"">
+ 
+    <td width=""70%"">
+    <canvas id=""canvas{{_index}}"" width=""550"" height=""550"">
+        <img class=""photo"" src=""{{url}}"" alt=""InvoiceImage"" style=""max-width: 100%;max-height: 100%; height: inherit !important;"">
+    </canvas>
+    </br>
+    <p align=""center"">
+    <input id=""createzonesbutton{{_index}}"" title=""Press alt to switch modes"" type=""button"" class=""buttoncreatezones btn btn-sm btn-primary"" value=""create zones""/>
+    <input id=""moveimagebutton{{_index}}"" title=""Press alt to switch modes"" type=""button"" class=""buttonmoveimage btn btn-sm btn-default"" value=""move image""/>
+    <input id=""zoominbutton{{_index}}"" title=""Press ctrl-plus to zoom in"" type=""button"" class=""buttonzoomin btn btn-sm btn-default"" value=""zoom in""/>
+    <input id=""zoomoutbutton{{_index}}"" title=""Press ctrl-minus to zoom out"" type=""button"" class=""buttonzoomout btn btn-sm btn-default"" value=""zoom out""/>
+    <input id=""bestfitbutton{{_index}}"" title=""Press ctrl-0 to zoom to best fit"" type=""button"" class=""buttonbestfit btn btn-sm btn-default"" value=""best fit""/>
+    <input id=""originalsizebutton{{_index}}"" title=""Press ctrl-1 to zoom to original size"" type=""button"" class=""buttonoriginalsize btn btn-sm btn-default"" value=""100%""/>
+    <input id=""deletezonebutton{{_index}}"" title=""Press delete or backspace to delete selected zones"" type=""button"" class=""buttondeletezone btn btn-sm btn-danger"" value=""delete zone""/>
+    <input id=""rotateleftbutton{{_index}}"" title=""Press left-arrow to rotate the image"" type=""button"" class=""buttonrotateleft btn btn-sm btn-default"" value=""rotate left""/>
+    <input id=""rotaterightbutton{{_index}}"" title=""Press right-arrow to rotate the image"" type=""button"" class=""buttonrotateright btn btn-sm btn-default"" value=""rotate right""/>
+    </p>
+    </br>
+  </td>
+  <td width=""30%"">
+   
+    <font color=""blue""> <h2> Type NA if nothing was found</h2></font> 
+
+        {{#text_field ""InvoiceNumber"" class=""ocr-correction"" size=""20""}}{{/text_field}}
+  
+ 
+    {{#hidden_field ""Annotation"" class=""AnnotationArray{{_index}}"" }}{{/hidden_field}}
+   
+  </td>
+</tr>
+
+<script>
+$(document).ready(function() {
+    //When getting it's from JSON using handlesbar, the default handlesbar
+    //extraction is string. That's why we get [Object Object] in every element.
+    //to resolve it, we need to extract the data using handlesbar's loop and reconstruct
+    //it back into JSON
+    
+  //  var extractedJson = '[';    //begining of the structure
+//    {{#each zonesjson}}         //this is handlesbar looping
+ //       extractedJson = extractedJson+'{""x"":{{x}},""y"":{{y}},""w"":{{w}},""h"":{{h}} },';
+//    {{/each}}
+    
+ //   if(extractedJson.length > 1) {
+        //finalizing - removing space+comma+closer and place closer + structure closer
+ //       extractedJson = extractedJson.substring(0, extractedJson.length - 3) + ""}]"";
+        //parsing it as a JSON into JsonArr
+ //       var jsonArr = JSON.parse(extractedJson);
+ //       setZonesOfCanvas({{_index}}, jsonArr);
+//    }
+ 
+    //if you write this without stringify you get [object object] but if you serialize
+    //the json into string using stringify this time you can see the results
+   
+    //alert(""index: "" + {{_index}} + "", len: "" + jsonArr.length + "" "" + JSON.stringify(jsonArr[1]));
+})
+
+$(document).on(""submit"", ""form"", function (e) {
+    var oForm = $(this);
+    var formId = oForm.attr(""id"");
+    var data = getDataOfCanvas({{_index}});
+    var zoneData = '';
+    if(data) {
+        //Zone of one canvas data will be written in the hidden field using this structure:
+        //zone0;xpos;ypos;width;height;zone1;xpos;ypos;width;height;zone2;xpos;ypos;width;height;...
+        zoneData = ""[ "";
+        for(i = 0; i < data.zones.length; i++) {
+            
+            //Json format with escaped quotes
+            zoneData += ""{\""x\"":"" + Math.round(data.zones[i].x) + "",\""y\"":"" + Math.round(data.zones[i].y) + "",\""w\"":"" + 
+                         Math.round(data.zones[i].w) + "",\""h\"":"" + Math.round(data.zones[i].h) + ""}"";
+
+            if(i < (data.zones.length - 1)) {
+                zoneData += "", "";
+            }
+        }
+        zoneData += "" ]"";
+    }
+    $("".AnnotationArray"" + {{_index}}).val(zoneData);
+//   alert(data.zones.length + "" zones. Zone data: "" + zoneData);
+ //   var firstValue = oForm.find(""input"").first().val();
+//    alert(""Form '"" + formId + "" is being submitted, value of first input is: "" + firstValue);
+    // Do stuff 
+    return true;
+})
+</script>
+","<head>
+<script src=""//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js""></script>
+<!--<script src=""https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1454550592302-jquery.panzoom.js""></script>-->
+<link href=""https://www.jqueryscript.net/css/jquerysctipttop.css"" rel=""stylesheet"" type=""text/css"">
+</head>
+
+
+
+<div class=""bg-info"">
+    <h2>Instructions</h2>
+    <ul>
+       <li>Look at the image and mark any AREA which can be classified as Hand-Writing</li>
+        <li>Select the area using your mouse and type HW as a description like in the example. Make sure to hit the 'Save' Button for each selected area.</li>
+        <li>If there are no areas to select? Enter NA in the text field as in the sample.</li>
+  <li>Use the Zoom functionality if you're not sure.</li>
+<br/>
+<b>Please note</b> - Make  4 mistakes and the HIT will be rejected. You have 4 invoices in each batch and each with max 3 regions. The system is validating your data and approve tasks with up to 4 mistakes.
+
+
+        
+ 
+    </ul>
+</div>
+<x-settings showzones=true singlezone=false zonecolor=""rgba(40, 200, 0, 0.2)"" zoneborder=""rgba(0, 70, 0, 1.0)"" />
+<table>
+    {{ work_units }}    
+</table>
+
+<script src=""https://s3-us-west-1.amazonaws.com/fasterap/users/37/incoming/35/1456585532846-imageViewer.js""></script>
+","canvas {
+    border:1px solid black;
+    margin: 10px;
+}
+
+tr.highlighter.active{
+    background-color: yellow;
+}
+
+td {
+   padding: 50px 0px;
+}
+.ocr-correction {
+    font-size: 14px;
+    
+}
+
+.bg-info { 
+    background-color: #95aee8; 
+    overflow: auto;
+    margin: 10px;
+    padding: 10px;
+     box-shadow: 0 0 5px 1px #969696;
+}
+
+
+.ocr-image {
+    margin: 7px;
+}
+
+.photo {
+    width: 90%;
+    height:90%;
+}
+.zoom-btn {
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 999999999;
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1px solid black;
+ 
+}
+
+.zoom-btn-plus {
+  background: white url('https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1454559703385-plus.png') no-repeat center;
+  top: 4px;
+  left: 4px;
+}
+
+.zoom-btn-minus {
+  background: white url('https://s3-us-west-1.amazonaws.com/fasterap/users/1/incoming/1454559702844-minus.png') no-repeat center;
+  top: 4px;
+  left: 30px;
+}
+
+.zoomWindow { border: 1px solid black;
+ }
+ 
+ input[type=text]:focus, textarea:focus {
+ box-shadow: 0 0 5px 1px #969696;
+
+}","$('input[type=""text""]').blur(function(){
+    $(this).parents('tr').removeClass('active');
+}); 
+
+$('input[type=""text""]').focusin(function(){
+    $(this).parents('tr').addClass('active');
+});
+
+
+
+$('input[type=""text""]:first').focus();
+
+//jQuery('img').load(function() {
+//				jQuery("".photo"").jspanzoom({scrollZoom : true});
+//			});","",,"","","","",2016-03-22 13:15:25 UTC,2016-03-22 13:15:47 UTC,false,,{},private,storm_step_224,false,false,"",600,true,"#This function compares rectangles. 
+#The function expect same number of rectangles. if less then it's false
+#The Tolerance variable is the tolerance for comparison
+@Tolerance = 85
+
+
+def CompareSingleJsonRectangles (json1,json2,tolerance)
+    x1 = json1[""x""]
+    y1 = json1[""y""]
+    x12 = x1+ json1[""w""]
+    y12 = y1+ json1[""h""]
+    x2 = json2[""x""]
+    y2 = json2[""y""]
+    x22 = x2+ json2[""w""]
+    y22 = y2+ json2[""h""]
+    avgArea = ((json1[""w""]*json1[""h""])+(json2[""w""]*json2[""h""]))/2
+    x_overlap = [0,[x12,x22].min - [x1,x2].max].max
+    y_overlap = [0,[y12,y22].min - [y1,y2].max].max
+    overlap =  (x_overlap * y_overlap) *100/ avgArea
+
+    
+   # return x1.to_s + "":"" + y1.to_s + "":"" + x12.to_s + "":"" + y12.to_s + ""overlapx:""+x_overlap.to_s+"":""+y_overlap.to_s+
+   # "" --> ""+overlap.to_s + "" : ""+avgArea.to_s
+   return overlap >= tolerance
+    end
+
+
+def CompareJsonsArrays (json1,json2,tolerance)
+    firstJsonArray = JSON.parse(json1[""Annotation""])
+     secondJsonArray = JSON.parse(json2[""Annotation""])
+     @retString = """"
+     if (firstJsonArray.length == secondJsonArray.length) and
+       json1[""Annotation""].length > 4
+      
+         #looping on each array1 and array2. at the end -> number of TRUEs should reach length
+         @TrueCounter = 0
+         @FirstArrayIndex = 0
+        
+         loop do
+         @SecondArrayIndex = 0
+            loop do
+                #@retString += ""[""+@FirstArrayIndex.to_s+"",""+ @SecondArrayIndex.to_s+""]""
+                if CompareSingleJsonRectangles firstJsonArray[@FirstArrayIndex],secondJsonArray[@SecondArrayIndex],tolerance 
+                     @TrueCounter += 1
+                 end
+                 
+                  @SecondArrayIndex+=1
+                  break if @SecondArrayIndex >= secondJsonArray.length
+            end
+            
+         @FirstArrayIndex += 1
+         break if @FirstArrayIndex >= firstJsonArray.length
+         end
+         
+         
+     
+  return   @TrueCounter >= firstJsonArray.length  
+    else
+        #In case the JSONS are either different, or empty we get here
+        #however, if jsons are empty (no annotations), and all the rest is equal then we should return true
+        
+       
+        if json1.except(""id"")==json2.except(""id"")  #if they're true and above 4 digits in annotation it wouldn't get here
+            return true
+        else
+           return false
+    end
+   end
+end
+
+
+
+standardized_answers_array.each_with_index do |i,index|
+    internalInd = 0
+    agreedParam = false
+    loop do 
+    
+       if index != internalInd #internal loop skip same items
+          agreedParam =
+            CompareJsonsArrays standardized_answers_array[index],
+                             standardized_answers_array[internalInd], @Tolerance
+           
+             if agreedParam == true
+                     standardized_answers_array[index][""master_result""] = true
+                     standardized_answers_array[internalInd][""master_result""] = true
+             else
+                   standardized_answers_array[index][""master_result""] = false
+             end
+         
+             
+        
+             break if agreedParam ==  true  #if we found matching, we can skip the loop
+       end   
+    
+    internalInd+=1
+    break if internalInd ==standardized_answers_array.length
+    end
+     
+  
+
+end
+
+
+return standardized_answers_array"
