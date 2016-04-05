@@ -1,0 +1,97 @@
+id,workflow_id,name,title,description,keywords,annotation,code,instructions,batch_size,min_workers,max_workers,adjudication_strategy,adjudication_strategy_params,quality_strategy,quality_strategy_params,compensation_strategy,compensation_strategy_params,next_step_strategy,next_step_strategy_params,work_unit_json_example,work_unit_html,job_html,css_code,js_code,check_unreadability_code,instance_comparison_strategy,instance_comparison_code,standardize_answers_code,combine_answers_code,compare_with_official_code,created_at,updated_at,is_first_step,code_validation,qualification_strategy_params,platform,crowd_task_name,is_send_box,work_on_output,comparison_strategy_code,time_allowed,auto_ful_fillment,transformed_combine_answers_code
+8,7,Resolve case index,Extract data from image: Short & Easy Task,"","",,"","<p>
+   <strong>BONUS AVAILABLE!</strong>
+  Make 0 mistakes and we will award you a <strong>200% ($0.10)</strong> bonus for your work.
+</p>
+<p>
+<i></i>
+  Make more than 4 mistakes and the HIT will be rejected.
+</p>
+
+<p>
+  <strong>Your task is to correct items from the ""Table of Topics"" section of a book and split them into two fields: </strong>
+  </p><ol>
+    <li>Item - should be placed in the left field of every row.</li>
+    <li>Page Numbers where the item appears - should be placed in the right field when exist(s).</li>
+  </ol>
+<p></p>
+<p>
+  <strong>Notes: </strong>
+  </p><ul>
+    <li>Include all punctuation and special characters such as colon, semi-colon, dots etc.,
+      unless they seem like ""dirt"".</li>
+    <li>Do not include the alignment dots (.......) at the end of the line.</li>
+    <li>Unreadable text? Please replace the entire field with <strong>n/a</strong></li>
+  </ul>
+<p></p>",10,1,1,minimum,,basic,"{""error_thresholds""=>{""block""=>nil, ""poor""=>5, ""good""=>0, ""excellent""=>0}}",,,descriptive,"{""if_agreement_action""=>""finish"", ""if_agreement_next_step""=>nil, ""if_disagreement_action""=>""finish"", ""if_disagreement_next_step""=>nil, ""if_unreadable_action""=>""finish"", ""if_unreadable_next_step""=>nil}","{""text"":""Yonkers Railroad Ce., Lane v"",
+""page_number"":""919"",
+""page_id"":47996,
+""url"":""http://cdn.fasterap.com/users/ravel_tmp/ocr/c604bb30-67cd-4444-a579-4cea1fad706c-prep.png"",
+""page_width"":1660,
+""length"": 1,
+""lines"":[
+    {""text"":""Yonkers Railroad Ce., Lane v"",
+    ""top"":629,
+    ""left"":908,
+    ""width"":607,
+    ""height"":33,
+    ""left_offset"":0,
+    ""page_numbers"":""919""}]}","{{#each lines}}
+<tr class=""highlighter"">
+  <td rowspan=""{{../length}}"">
+      <div class=""case-grouper case-grouper-{{#if_even}}1{{else}}2{{/if_even}}""></div>
+  </td>
+  <td>
+      <div class=""ocr-image"">
+      <div style=""background-image: url({{../url}});
+              margin-left: {{left_offset}}px;
+              background-position: -{{left}}px -{{top}}px;
+              width: {{width}}px;
+              height: {{height}}px;
+              background-size: {{../page_width}}px;""></div>
+    </div>
+  </td>
+  <td>
+    {{#text_field ""text"" class=""ocr-correction"" size=""40""}}{{/text_field}}
+  </td>
+  <td>
+    {{#text_field ""page_numbers"" class=""ocr-correction"" size=""10""}}{{/text_field}}
+  </td>
+    
+</tr>
+{{/each}}","<table>
+    {{ work_units }}    
+</table>","tr.highlighter.active{
+    background-color: yellow;
+}
+
+.ocr-correction {
+    font-size: 14px;
+}
+
+.ocr-image {
+    margin: 7px;
+}
+
+.case-grouper {
+    width: 5px;
+    height: 100%;
+    min-height: 20px;
+}
+
+.case-grouper-1 {
+    background-color: red;
+}
+
+.case-grouper-2 {
+    background-color: blue;
+}
+","$('input[type=""text""]').blur(function(){
+    $(this).parents('tr').removeClass('active');
+}); 
+
+$('input[type=""text""]').focusin(function(){
+    $(this).parents('tr').addClass('active');
+});
+
+$('input:first').focus();","",,"","","","",2014-12-02 20:40:01 UTC,2016-01-22 20:50:14 UTC,true,,{},private,storm_step_8,,false,,600,true,
