@@ -1,0 +1,203 @@
+id,workflow_id,name,title,description,keywords,annotation,code,instructions,batch_size,min_workers,max_workers,adjudication_strategy,adjudication_strategy_params,quality_strategy,quality_strategy_params,compensation_strategy,compensation_strategy_params,next_step_strategy,next_step_strategy_params,work_unit_json_example,work_unit_html,job_html,css_code,js_code,check_unreadability_code,instance_comparison_strategy,instance_comparison_code,standardize_answers_code,combine_answers_code,compare_with_official_code,created_at,updated_at,is_first_step,code_validation,qualification_strategy_params,platform,crowd_task_name,is_send_box,work_on_output,comparison_strategy_code,time_allowed,auto_ful_fillment,transformed_combine_answers_code
+112,55,Dates,"Date-fields validation - easy, just scroll and find mistakes!",Easy task - Type numbers from images,Numbers Transcribe Data Entry OCR,,300,"<b></b><h3>
+  <strong>Your task is just to VALIDATE dates from images. Please make sure to type the correct content of the field.&nbsp; You don't need to correct, just mark X.<br></strong></h3>
+
+<p>
+
+  Make more than 5 mistakes and the HIT will be rejected.
+</p><strong>Notes: </strong>
+  <ul><li>All images are meant to be dates. You should mark X (X for error, blank/empty for a valid field)</li><li>A valid date is a date that was recognized correct and may have transformed, for example:<br>10-SEP-2015 can be 10-09-2015 -&gt; both are valid. <br></li></ul><ul><li>Please use only x or X.<br></li><li>If you got more than one date, make sure you mark it as X.<br></li><li>Sometimes the line of the box is visible, make sure to ignore it.<br></li><li>Sometimes you may see other pieces of data. make sure to extract only the one in the center which is relevant. <br></li><li>Sometimes 7 looks like 1 -&gt; Please be careful when reading&nbsp;1 or 7. check yourself.<br></li></ul><h2>Unreadable text? type 'X'</h2><strong></strong><p><br><strong></strong></p><p><br><strong></strong></p><p><span class=""wysiwyg-color-red""><b><u>For example</u></b></span></p><p><strong><br></strong></p><p><img src=""https://fasterap.s3.amazonaws.com/users/Demo/Psagot/ac1.png"" alt="""">&nbsp; <br></p><p><b>recognized as&nbsp; : &nbsp; 230922</b><br><strong></strong></p>we should mark&nbsp;<b>X</b> in the field for such a case because it's invalid content.<br><br><br><br><br><br><br><br>",40,2,5,majority,"{""threshold""=>0.51}",basic,"{""error_thresholds""=>{""block""=>35, ""poor""=>5, ""good""=>1, ""excellent""=>0}}",basic,"{""base_comp""=>0.04}",descriptive,"{""if_agreement_action""=>""custom"", ""if_agreement_next_step""=>""storm_step_114"", ""if_disagreement_action""=>""send_to"", ""if_disagreement_next_step""=>""storm_step_113"", ""if_unreadable_action""=>""send_to"", ""if_unreadable_next_step""=>""storm_step_113""}","{""snippet_image"":""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"",
+    ""content"":""123"",
+    ""identifier"":""c:\temp\1234.png""
+}","<tr class=""highlighter"">
+ 
+  
+  <td>
+   
+       <img src=""data:image/png;base64,{{snippet_image}}""/>
+  </td>
+  <td>
+  <font color=""green""> <h2> {{content}}</h2></font> 
+    
+     </td>
+     <td>
+      {{#text_field ""Date1"" class=""ocr-correction"" size=""5""}}{{/text_field}}
+  
+    <BR/>
+    <BR/>
+  </td>
+
+
+ 
+    
+</tr>
+ 
+
+","<div class=""bg-info"">
+    <h2>Instructions</h2>
+    <ul>
+    <li><b>Your task is to VALIDATE the dates from the images.</b></li>
+        <li>You do not need to go field by field with the tab, you can simply scroll - it' faster.</li>
+        <li>Please mark with 'x' or 'X' any wrong field.</li>
+      <li><B>a valid value is a date. you can see more samples in the instructions.</B></li>
+     
+    </ul>
+</div>
+
+<table>
+    {{ work_units }}    
+</table>","td {margin: 5px; padding: 15px;}
+tr.active {background: yellow;}
+.bg-info { 
+    background-color: #99CCFF; 
+    overflow: auto;
+    margin: 10px;
+    padding: 10px;
+     box-shadow: inset 0px 0px 4px #666;
+}
+
+
+.ocr-correction {
+    font-size: 14px;
+    width: 30px;
+     text-transform: uppercase;
+     padding: 5px;
+}","$('input[type=""text""]').blur(function(){
+    $(this).parents('tr').removeClass('active');
+}); 
+
+$('input[type=""text""]').focusin(function(){
+    $(this).parents('tr').addClass('active');
+});
+
+$('input:first').focus();","",,{Date1:work_unit_answer.Date1.upcase.upcase},"{Date1:work_unit_answer.Date1.upcase,
+content:work_unit_input.content,
+snippet_image:work_unit_input.snippet_image,
+identifier:work_unit_input.identifier
+}","","",2015-10-23 02:05:03 UTC,2015-10-29 13:18:26 UTC,true,"{""instance_comparison_code""=>nil, ""standardize_answers_code""=>nil}",{},private,storm_step_112,false,false,"",600,true,
+113,55,Dates - Exception,Date fields verification,"","",,"","<h3>
+  <strong>Your task is to key-in numbers from images. Please make sure to type the correct content of the field.</strong></h3>
+
+<p>
+
+  Make more than 5 mistakes and the HIT will be rejected.
+</p><strong>Notes: </strong>
+  <ul><li>All images are completed numbers with no spaces, dots or commas.&nbsp; Your answer should be one number only.<br></li><li>Please use only 0-9 character -&gt; no characters like comma etc.</li><li>If you got more than one number, make sure you connect it into one single number.</li><li>Sometimes the line of the box is visible, make sure to ignore it.<br></li><li>Sometimes you may see other pieces of data. make sure to extract only the one in the center which is relevant. <br></li></ul><h2>Unreadable text? Please replace the entire field with N/A</h2><strong></strong><p><br><strong></strong></p><p><br><strong></strong></p><p><span class=""wysiwyg-color-red""><b><u>For example</u></b></span></p><p><strong><br></strong></p><p><img src=""https://fasterap.s3.amazonaws.com/users/Demo/Psagot/ac1.png"" alt="""">&nbsp; <br></p><p><b>should be : &nbsp; 230322</b><br><strong></strong></p><br><br><br><br><br><br>",40,1,2,majority,"{""threshold""=>0.51}",basic,"{""error_thresholds""=>{""block""=>nil, ""poor""=>5, ""good""=>0, ""excellent""=>0}}",,,descriptive,"{""if_agreement_action""=>""finish"", ""if_agreement_next_step""=>""storm_step_112"", ""if_disagreement_action""=>""finish"", ""if_disagreement_next_step""=>""storm_step_112"", ""if_unreadable_action""=>""finish"", ""if_unreadable_next_step""=>""storm_step_112""}","{""url"": ""https://fasterap.s3.amazonaws.com/users/Demo/Psagot/ac1.png""}","<tr class=""highlighter"">
+ 
+  
+  <td>
+   
+       <img src=""data:image/png;base64,{{snippet_image}}""/>
+  </td>
+  <td>
+      <h3>{{fixedcontent}} </h3>
+        <h3>{{Date1}} </h3>
+  </td>
+  <td>
+    {{#text_field ""Number"" class=""ocr-correction"" size=""40""}}{{/text_field}}
+    <BR/>
+    <BR/>
+  </td>
+
+
+ 
+    
+</tr>
+ 
+","<table>
+    {{ work_units }}    
+</table>","td {margin: 5px; padding: 5px;}
+tr.active {background: yellow;}
+.bg-info { 
+    background-color: #d9edf7; 
+    overflow: auto;
+    margin: 10px;
+    padding: 10px;
+}
+
+.case-grouper-1 {
+    background-color: red;
+}
+
+.case-grouper-2 {
+    background-color: blue;
+}
+","$('input[type=""text""]').blur(function(){
+    $(this).parents('tr').removeClass('active');
+}); 
+
+$('input[type=""text""]').focusin(function(){
+    $(this).parents('tr').addClass('active');
+});
+
+$('input:first').focus();","",,"","","","",2015-10-23 02:05:03 UTC,2015-10-29 13:31:00 UTC,false,,{},private,storm_step_113,false,false,"",600,true,
+114,55,Dates - Agreeing,Date-fields typing,Easy task - Type numbers from images,Numbers Transcribe Data Entry OCR,,300,"<b></b><h3>
+  <strong>Your task is just to TYPE-IN the dates from images. Please make sure to type the correct content of the field.&nbsp; <br>A date must be MM/DD/YYYY or MM/DD/YY&nbsp; (Use / or . or -&nbsp; characters depends on the image).<br></strong></h3>
+
+<p>
+
+  Make more than 5 mistakes and the HIT will be rejected.
+</p><strong>Notes: </strong>
+  <ul><li>All images are meant to be dates. You should correct the data and write the date.<br></li><li>A valid date is a date following the mask MM/DD/YYYY or MM/DD/YY.<br></li></ul><ul><li>Please use DIGITS and - (dash/ dot/ backslash) only!<br></li><li>If you got more than one date, make sure you choose the first one on the left/up side of the snippet.<br></li><li>Sometimes the line of the box is visible, make sure to ignore it.<br></li><li>Sometimes you may see other pieces of data. make sure to extract only the one in the center which is relevant. <br></li><li>Sometimes 7 looks like 1 -&gt; Please be careful when using 1 or 7. check yourself.<br></li></ul><h2>Unreadable text? Please replace the entire field with 'X'</h2><strong></strong><p><br><strong></strong></p><p><br><strong></strong></p><p><span class=""wysiwyg-color-red""><b><u>For example</u></b></span></p><p><strong><br></strong></p><p><img src=""https://fasterap.s3.amazonaws.com/users/Demo/Psagot/ac1.png"" alt="""">&nbsp; <br></p><p><b>recognized as&nbsp; : &nbsp; 230922</b><br><strong></strong></p>we should mark X in the field for such a case.<br><br><br><br><br><br><br><br>",40,2,3,majority,"{""threshold""=>0.55}",basic,"{""error_thresholds""=>{""block""=>35, ""poor""=>5, ""good""=>1, ""excellent""=>0}}",basic,"{""base_comp""=>0.04}",descriptive,"{""if_agreement_action""=>""finish"", ""if_agreement_next_step""=>""storm_step_113"", ""if_disagreement_action""=>""send_to"", ""if_disagreement_next_step""=>""storm_step_113"", ""if_unreadable_action""=>""send_to"", ""if_unreadable_next_step""=>""storm_step_113""}","{""snippet_image"":""iVBORw0KGgoAAAANSUhEUgAAAO0AAABGCAYAAAAglhOiAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAuIwAALiMBeKU/dgAABR1JREFUeF7tlNFu7jAIg/f+L71zemHJQqRNAqRl8idFXQg4Jr/Yz68QohUaWiGaoaEVohkaWiGaoaEVohkaWiGaoaEVohkaWiGaoaEVohkaWiGaoaEVohkaWiGaoaEVohkaWiGaoaEVohkaWiGaoaEVohkaWiGaoaEVohkaWiGacWxof370/2EVvFnW2106WIx3j83pQpbvL/d/zNn1CFjMKL6CrcffnmbkntOgL6wMrJ7dg1H8q7DfqGerw3vELlbjWeQrOngNcIzjq1gdaM3Gvky2X6u3sr5Olmdby3q87s7syubYr+E1wTGOr2I1eD9aHajwbLVYfxTvQpZnT8fGeH8Xr6BGdcCoid3m+GFYA3GOAS//y4z6mIVrs3S+gtfbaZ+je699lZfyDmF+poGZXC/nLv8O1O3WZ4KesBDj7w5WcxWuj+hkMvJk96tw/a7GCUqdrTyCzb3Ln80bEa3PZuRnFJ8lWn+RoZGN58mLrWI1dnWqKXW18gCzuTbvLveOaH0m7GW0dolqcP2uRjbWE3zZ/Spcv6txgjJn3PjKA6zmruQD1O3WV2G9ZHnM6DFDIxv2hHeK+ESt/X6NdFd4uEjDXO/p4Nw7WyFaf4Jon6iP6ETrT5HpExqsaXXtmT2vIv2WaBNP9U/ns2TpVJLhMaph63c0TpDlc6ThxS5G8UrSb+Imdhqx9Vbj6XyWDI1qMjxma3yZLJ+s4y1wd1ZJ+i0Z5p80onegNqpTDfy96fPk3Rn3QCOqZfvG3tO9i1dQo/qfiGE8woqGl3tXj7OnO7w8r2YU8+KrZGgAeGJv9m/A8SeQyzX2b4A4n1/Y/Qqst6uRSaWPdFX7cBHjrHMH8jj/KTYL14O7GMext7mzcH1EB6DeavIand/h5dsFvLiNIb5KtD4L9lHhJV0xwzDXPmkg19Z4MXw5PoLz7tZq7irRegvrjZbNm4HzR2uU58VXidZnYX1UeCnpLsPwigbnIp/rOMY5T3A+auweeHEvtkK03gNaVtO7A3d7Zx4jDY/V+AxXbaQ+C/io8pKumml4VmOU5/mo9OXFo/dd9Rka/N0h6uEEeKu3veL+Kh8lqpHH49qdeo9svROw54j3qIat39E4wZc8VvtIV2XDO8aj9ZZsvZNk+I5qROtP8gWv1kOFj3TFDMPReo9svRNkvUNUJ1p/Avb4ts9qH8e6m20gs1loZem9QUYPmfURnWrgc9djtJ7J0vEo/QX4Ee6a8HJGubOwVkfgP9KH1cjQ+Srscddnhcauzh3lv8Ksec57yn3CakX13iKjh6iGrd/ROEXUZ7QeZGjcUf4LcAN3TczmzZKp9SbRHjLeIUPjBFGftn5HhzWwsjnyK7DxuyayGoTO9c3SfAP2b/vY6e2uxotz/qjubdjXnddV/0/50fMIdcoOo0aueLRJaEAnqnca9o8FbMzuV2EdfK0exzj+FTx/9m+AOJ/PwjX85fgFxzheQa064TXlxXbJ1HqDkX8b4z3HZ/DqbMxbX8TzyQuM4jPYWruQg689q6JW3eA15sV2sDoRrTcYeffiXmwWr9buLzjG8S9h/fEesYtR/Alb5y0wildQq+7gNZTVKHQytN7ihHfvjs5vNkN2f1YP+xPv+Ld/KSH+IBpaIZqhoRWiGRpaIZqhoRWiGRpaIZqhoRWiGRpaIZqhoRWiGRpaIZqhoRWiGRpaIZqhoRWiGRpaIZqhoRWiGRpaIZqhoRWiGRpaIZqhoRWiGRpaIVrx+/sPL0mU0V54e6kAAAAASUVORK5CYII="",
+    ""content"":""1234"",
+    ""Date1"":""X""
+}","<tr class=""highlighter"">
+ 
+  
+  <td>
+   
+       <img src=""data:image/png;base64,{{snippet_image}}""/>
+  </td>
+  <td>
+
+     <td>
+      {{#text_field ""fixedcontent"" class=""ocr-correction"" size=""5""}}{{/text_field}}
+  
+    <BR/>
+    <BR/>
+  </td>
+
+
+ 
+    
+</tr>
+ 
+","<div class=""bg-info"">
+    <h2>Instructions</h2>
+    <ul>
+    <li><b>Your task is to TYPE-IN the dates from the images.</b></li>
+        <li>You need to go field by field with the tab.</li>
+        <li>Please mark with 'x' or 'X' any wrong field which you can't type in.</li>
+      <li><B>a valid value is a date. you can see more samples in the instructions.</B></li>
+     
+    </ul>
+</div>
+
+<table>
+    {{ work_units }}    
+</table>","td {margin: 5px; padding: 15px;}
+tr.active {background: #E8B772;}
+.bg-info { 
+    background-color: #99CCFF; 
+    overflow: auto;
+    margin: 10px;
+    padding: 10px;
+     box-shadow: inset 0px 0px 4px #666;
+}
+
+
+.ocr-correction {
+    font-size: 14px;
+     text-transform: uppercase;
+}","$('input[type=""text""]').blur(function(){
+    $(this).parents('tr').removeClass('active');
+}); 
+
+$('input[type=""text""]').focusin(function(){
+    $(this).parents('tr').addClass('active');
+});
+
+$('input:first').focus();","",,"","{fixedcontent:work_unit_answer.fixedcontent.upcase,
+content:work_unit_input.content,
+identifier:work_unit_input.identifier
+}","","",2015-10-23 02:30:58 UTC,2015-10-29 13:24:44 UTC,false,"{""standardize_answers_code""=>nil}",{},private,storm_step_114,false,true,"",600,true,
